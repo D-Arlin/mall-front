@@ -22,9 +22,7 @@ public class OrderController {
     private OmsPortalOrderService portalOrderService;
 
     @PostMapping("generateOrder")
-    public CommonResult generateOrder(OmsCartItem cartItem){
-        System.err.println(cartItem);
-        portalOrderService.generateOrder(cartItem);
-        return CommonResult.success(1);
+    public CommonResult generateOrder( OmsCartItem cartItem){
+        return portalOrderService.generateOrder(cartItem);
     }
 }

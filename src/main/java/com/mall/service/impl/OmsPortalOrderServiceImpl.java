@@ -46,9 +46,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //根据商品合计、运费、活动优惠、优惠券、积分计算应付金额
         OmsOrder order = new OmsOrder();
         order.setDiscountAmount(new BigDecimal(0));
-        order.setTotalAmount(omsCartItem.getPrice());
+        order.setTotalAmount(omsCartItem.getPrice().multiply(new BigDecimal(omsCartItem.getQuantity())));
         order.setFreightAmount(new BigDecimal(0));
-        order.setPayAmount(omsCartItem.getPrice());
+        order.setPayAmount(omsCartItem.getPrice().multiply(new BigDecimal(omsCartItem.getQuantity())));
         //转化为订单信息并插入数据库
 
         order.setCreateTime(new Date());
@@ -69,6 +69,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         order.setReceiverCity(omsCartItem.getCity());
         order.setReceiverRegion(omsCartItem.getRegion());
         order.setReceiverDetailAddress(omsCartItem.getDetailAddress());
+        order.setNote(omsCartItem.getNote());
         //0->未确认；1->已确认
         order.setConfirmStatus(0);
         order.setDeleteStatus(0);
@@ -76,15 +77,15 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         order.setOrderSn(generateOrderSn(order));
 
         //插入order表和order_item表
-        omsOrderDao.insert(order);
-        orderItem.setOrderId(order.getId());
+        Long insert = Long.valueOf(omsOrderDao.insert(order));
+        orderItem.setOrderId(insert);
         orderItem.setOrderSn(order.getOrderSn());
         portalOrderItemDao.insert(orderItem);
 
         Map<String, Object> result = new HashMap<>();
         result.put("order", order);
         result.put("orderItemList", orderItem);
-        return CommonResult.success(result, "下单成功");
+        return CommonResult.success("下单成功");
     }
 
 

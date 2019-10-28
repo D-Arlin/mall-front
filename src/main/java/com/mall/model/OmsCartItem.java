@@ -88,4 +88,7 @@ public class OmsCartItem implements Serializable {
 
     @ApiModelProperty(value = "详细地址(街道)")
     private String detailAddress;
+
+    @ApiModelProperty(value = "订单备注")
+    private String note;
 }
